@@ -12,7 +12,6 @@ class UsersController
     public function index(): View
     {
         // get information from database
-        // create array with Article objects
         $stmt = (new Dbh())->connect()->prepare('SELECT * FROM article');
         $stmt->execute();
         $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
