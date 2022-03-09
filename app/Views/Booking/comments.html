@@ -18,16 +18,17 @@
             Room Nr.:{{ apartment_id }}
         </div>
         <div class="card-body">
-            <h5 class="card-title">{{ name }}</h5>
+            <h5 class="card-title">Name: {{ name }}</h5>
             <p class="card-text">Address: {{ address }}</p>
             <p class="card-text">Check - in: {{ arrival }}</p>
             <p class="card-text">Check - out: {{ departure }}</p>
+            <p class="card-text">Total price: {{ total }} EUR</p>
 
-            <form action="/booking/{{ apartment_id }}/delete" method="POST">
-                <input type="hidden" name="arrival" value="{{ arrival }}" />
-                <input type="hidden" name="departure" value="{{ departure }}" />
-                <button type="submit" class="btn btn-danger">Delete</button>
-            </form>
+<!--            <form action="/booking/{{ apartment_id }}/delete" method="POST">-->
+<!--                <input type="hidden" name="arrival" value="{{ arrival }}" />-->
+<!--                <input type="hidden" name="departure" value="{{ departure }}" />-->
+<!--                <button type="submit" class="btn btn-danger">Delete</button>-->
+<!--            </form>-->
 
         </div>
     </div>

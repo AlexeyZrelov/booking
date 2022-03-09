@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Redirect;
 use App\View;
 use App\Models\Dbh;
+use Carbon\Carbon;
 use PDO;
 
 class BookingController
@@ -12,14 +13,21 @@ class BookingController
     public function index(array $vars): View
     {
 
+        $arrival = $_POST['arrival'] ?? null;
+        $departure = $_POST['departure'] ?? null;
+
         $stmt1 = (new Dbh())->connect()->prepare('SELECT * FROM apartment WHERE id = ?');
         $stmt1->execute([$vars['id']]);
         $result = $stmt1->fetchAll(PDO::FETCH_ASSOC);
 
+        $interval = Carbon::parse($arrival)->diffInDays($departure);
+        $total = $interval * $result[0]['booked'];
+
         return new View('Booking/index.html', [
 
-            'arrival' => $_POST['arrival'],
-            'departure' => $_POST['departure'],
+            'arrival' => $arrival,
+            'departure' => $departure,
+            'total' => $total,
             'results' => $result
 
         ]);
@@ -27,18 +35,20 @@ class BookingController
 
     public function save(): View
     {
+        $arrival = $_POST['arrival'] ?? null;
+        $departure = $_POST['departure'] ?? null;
 
-        $stmt = (new Dbh())->connect()->prepare('INSERT INTO booking (apartment_id, name, address, arrival, departure, booked) VALUES (?, ?, ?, ?, ?, ?)');
-        $stmt->execute([$_POST['apartment_id'], $_POST['name'], $_POST['address'], $_POST['arrival'], $_POST['departure'], $_POST['booked']]);
+        $stmt = (new Dbh())->connect()->prepare('UPDATE booking SET name=?, address=?, arrival=?, departure=? WHERE apartment_id=?');
+        $stmt->execute([$_POST['name'], $_POST['address'], $arrival, $departure, $_POST['apartment_id']]);
 
         return new View('Booking/comments.html', [
 
             'apartment_id' => $_POST['apartment_id'],
             'name' =>  $_POST['name'],
             'address' => $_POST['address'],
-            'arrival' => $_POST['arrival'],
-            'departure' => $_POST['departure'],
-            'booked' => $_POST['booked']
+            'arrival' => $arrival,
+            'departure' => $departure,
+            'total' => $_POST['booked']
 
         ]);
 

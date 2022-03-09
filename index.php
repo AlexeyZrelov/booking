@@ -6,9 +6,9 @@ use App\Controllers\LoginController;
 use App\Controllers\ApartmentController;
 use App\Controllers\BookingController;
 use App\Controllers\CommentController;
-use App\Controllers\RegistrController;
 use App\View;
 use App\Redirect;
+use Carbon\Carbon;
 use \Twig\Environment;
 use \Twig\Loader\FilesystemLoader;
 
@@ -38,14 +38,6 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
     $r->addRoute('POST', '/comments/save', [CommentController::class, 'save']);
     $r->addRoute('GET', '/comments', [CommentController::class, 'index']);
     $r->addRoute('GET', '/comments/{id:\d+}/delete', [CommentController::class, 'delete']);
-
-    $r->addRoute('POST', '/registration/login', [RegistrController::class, 'login']);
-    $r->addRoute('POST', '/registration/signup', [RegistrController::class, 'signup']);
-    $r->addRoute('GET', '/registration/continue', [RegistrController::class, 'continue']);
-    $r->addRoute('POST', '/registration/{id:\d+}/delete', [RegistrController::class, 'delete']);
-    $r->addRoute('GET', '/registration/{id:\d+}/create', [RegistrController::class, 'create']);
-    $r->addRoute('POST', '/registration/{id:\d+}/article', [RegistrController::class, 'article']);
-
 
 });
 

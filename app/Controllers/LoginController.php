@@ -82,12 +82,18 @@ class LoginController
             $_SESSION['password'] = $user[0]['password'];
             $_SESSION['created_at'] = $user[0]['created_at'];
 
+            // All apartment
+            $stmt3 = (new Dbh())->connect()->prepare('SELECT * FROM apartment');
+            $stmt3->execute();
+            $allApartment = $stmt3->fetchAll(PDO::FETCH_ASSOC);
+
             return new View('Login/main.html', [
 
                 'id' => $_SESSION['user_id'],
                 'uid' => $_SESSION['log_name'],
                 'email' => $_SESSION['email'],
-                'date' => $_SESSION['created_at']
+                'date' => $_SESSION['created_at'],
+                'apartments' => $allApartment
 
             ]);
 

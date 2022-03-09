@@ -24,6 +24,7 @@
             <p class="card-text">{{ result.description }}.</p>
             <p class="card-text">Check - in: {{ arrival }}</p>
             <p class="card-text">Check - out: {{ departure }}</p>
+            <p class="card-text">Total price: {{ total }} EUR</p>
             <p>
             <form action="/booking/save" method="POST">
                 <div class="mb-3">
@@ -37,7 +38,7 @@
                 <input type="hidden" name="apartment_id" value="{{ result.id }}" />
                 <input type="hidden" name="arrival" value="{{ arrival }}" />
                 <input type="hidden" name="departure" value="{{ departure }}" />
-                <input type="hidden" name="booked" value="1" />
+                <input type="hidden" name="booked" value="{{ total }}" />
                 <button type="submit" class="btn btn-primary">Confirm</button>
             </form>
             </p>

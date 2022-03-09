@@ -12,7 +12,7 @@
 
 <div class="container" style="width: 70%;">
     <h5 style="text-align: center;">Availability</h5>
-    <div class="container px-4">
+    <div class="container">
 
         <form class="d-flex" action="/apartment/search" method="POST">
             <div class="row gx-5">
@@ -34,7 +34,7 @@
             <div class="row gx-5">
                 <div class="col">
                     <div class="p-3 bg-light">
-                        <button id="check" class="btn btn-success" type="submit"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                        <button id="check" class="btn btn-primary" type="submit"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
                             <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
                         </svg>  Search</button>
                     </div>
@@ -44,8 +44,35 @@
 
     </div>
 
-<!--=============================================-->
+<!-- // all apartment   -->
 
+    <div class="container">
+
+        <div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
+
+            {% for apartment in apartments %}
+
+            <div class="feature col">
+                <div class="feature-icon bg-primary bg-gradient">
+                    <svg class="bi" width="1em" height="1em"><use xlink:href="#collection"></use></svg>
+                </div>
+                <h2>{{ apartment.title }}</h2>
+                <p>{{ apartment.description }}.</p>
+                <h5 class="d-inline p-2"> Price: </h5>
+                <h5 class="d-inline p-2 bg-primary text-white">{{ apartment.booked }} EUR</h5>
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+
+    </div>
+
+<!-- // end all apartments -->
+
+<!-- // search -->
+    <div class="container">
     {% for result in results %}
 
     <div class="card" style="width: 500px;">
@@ -56,18 +83,13 @@
             <h5 class="card-title">{{ result.title }}</h5>
             <p class="card-text">{{ result.description }}.</p>
             <p class="card-text">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-people-fill" viewBox="0 0 16 16">
-                    <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
-                    <path fill-rule="evenodd" d="M5.216 14A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216z"/>
-                    <path d="M4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/>
-                </svg>
+                <h5 style="float: right; margin-right: 20px;">Price: {{ result.booked }} EUR</h5>
             </p>
-<!--            <a href="/booking/{{ result.id }}" class="btn btn-primary">Book</a>-->
             <form method="post" action="/booking/{{ result.id }}">
                 <input type="hidden" name="apartment_id" value="{{ result.id }}" />
                 <input type="hidden" name="arrival" value="{{ arrival }}" />
                 <input type="hidden" name="departure" value="{{ departure }}" />
-                <input type="hidden" name="booked" value="1" />
+                <input type="hidden" name="booked" value="{{ result.booked }}" />
                 <button class="btn btn-primary" type="submit">Book</button>
             </form>
 
@@ -76,9 +98,13 @@
 
     {% endfor %}
 
+    </div>
+
+
+
+
+
 </div>
-
-
 
 
 
