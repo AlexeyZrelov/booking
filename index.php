@@ -92,3 +92,4 @@ if (isset($_SESSION['errors'])) {
 if (isset($_SESSION['inputs'])) {
     unset($_SESSION['inputs']);
 }
+

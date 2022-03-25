@@ -10,7 +10,7 @@ class User
     private string $password;
     private string $created_at;
 
-    public function __construct(int $id, string $uid, string $email, string $password, string $created_at)
+    public function __construct(int $id, string $uid, string $email, string $password, string $created_at = '')
     {
         $this->id = $id;
         $this->uid = $uid;
