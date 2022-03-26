@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Redirect;
+use App\Repositories\Apartment\PdoApartmentRepository;
 use App\View;
 use App\Models\Dbh;
 use PDO;
@@ -21,14 +22,8 @@ class ApartmentController
         $arrival = $_POST['arrival'] ?? null;
         $departure = $_POST['departure'] ?? null;
 
-//        $stmt = (new Dbh())->connect()->prepare('INSERT INTO apartment (title, description, address, arrival, departure) VALUES (?, ?, ?, ?, ?)');
-//        $stmt->execute([$_POST['title'], $_POST['description'], $_POST['address'], $_POST['arrival'], $_POST['departure']]);
-
-        $stmt = (new Dbh())->connect()->prepare('INSERT INTO apartment (title, description, address, arrival, departure, booked) VALUES (?, ?, ?, ?, ?, ?)');
-
-        $stmt->execute([$_POST['title'], $_POST['description'], $_POST['address'], $arrival, $departure, $_POST['booked']]);
-
-//        STR_TO_DATE($_POST['departure'], "%m-%d-%Y")
+        $apartment = new PdoApartmentRepository();
+        $apartment->insert();
 
         return new View('Apartment/show.html', [
 
@@ -36,7 +31,8 @@ class ApartmentController
             'description' => $_POST['description'],
             'address' => $_POST['address'],
             'arrival' => $arrival,
-            'departure' => $departure
+            'departure' => $departure,
+            'price' => $_POST['booked']
 
         ]);
     }
@@ -47,18 +43,8 @@ class ApartmentController
         $arrival = $_POST['arrival'] ?? null;
         $departure = $_POST['departure'] ?? null;
 
-        $stmt1 = (new Dbh())->connect()->prepare('SELECT * FROM booking WHERE departure <= ?');
-        $stmt1->execute(array($arrival));
-        $result1 = $stmt1->fetchAll(PDO::FETCH_ASSOC);
-
-        // Apartment
-        $stmt2 = (new Dbh())->connect()->prepare('SELECT * FROM apartment WHERE id = ?');
-
-        $result = [];
-        foreach ($result1 as $v) {
-            $stmt2->execute(array($v['apartment_id']));
-            $result[] = $stmt2->fetchAll(PDO::FETCH_ASSOC)[0];
-        }
+        $src = new PdoApartmentRepository();
+        $result = $src->allBookingDeparture();
 
         return new View('Login/main.html', [
 

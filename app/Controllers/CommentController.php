@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Redirect;
+use App\Repositories\Comment\PdoCommentRepository;
 use App\View;
 use App\Models\Dbh;
 use PDO;
@@ -11,9 +12,8 @@ class CommentController
 {
     public function index(): View
     {
-        $stmt1 = (new Dbh())->connect()->prepare('SELECT * FROM comments');
-        $stmt1->execute();
-        $result = $stmt1->fetchAll(PDO::FETCH_ASSOC);
+        $src = new PdoCommentRepository();
+        $result = $src->all();
 
         return new View('Comment/index.html', [
 
@@ -25,17 +25,16 @@ class CommentController
 
     public function save(): Redirect
     {
-
-        $stmt = (new Dbh())->connect()->prepare('INSERT INTO comments (apartment_id, name, comment, date) VALUES (?, ?, ?, NOW())');
-        $stmt->execute([$_POST['apartment_id'], $_POST['name'], $_POST['comment']]);
+        $src = new PdoCommentRepository();
+        $src->insert();
 
         return new Redirect('/comments');
     }
 
     public function delete(array $vars): Redirect
     {
-        $stmt = (new Dbh())->connect()->prepare('DELETE FROM comments WHERE id=?');
-        $stmt->execute([$vars['id']]);
+        $src = new PdoCommentRepository();
+        $src->deleteById($vars);
 
         return new Redirect('/comments');
     }

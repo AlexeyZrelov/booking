@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Redirect;
+use App\Repositories\Booking\PdoBookingRepository;
 use App\View;
 use App\Models\Dbh;
 use Carbon\Carbon;
@@ -16,12 +17,12 @@ class BookingController
         $arrival = $_POST['arrival'] ?? null;
         $departure = $_POST['departure'] ?? null;
 
-        $stmt1 = (new Dbh())->connect()->prepare('SELECT * FROM apartment WHERE id = ?');
-        $stmt1->execute([$vars['id']]);
-        $result = $stmt1->fetchAll(PDO::FETCH_ASSOC);
+        $src = new PdoBookingRepository();
+        $result = $src->allId($vars);
+        $price = $src->priceId($vars);
 
         $interval = Carbon::parse($arrival)->diffInDays($departure);
-        $total = $interval * $result[0]['booked'];
+        $total = $interval * $price;
 
         return new View('Booking/index.html', [
 
@@ -38,8 +39,8 @@ class BookingController
         $arrival = $_POST['arrival'] ?? null;
         $departure = $_POST['departure'] ?? null;
 
-        $stmt = (new Dbh())->connect()->prepare('UPDATE booking SET name=?, address=?, arrival=?, departure=? WHERE apartment_id=?');
-        $stmt->execute([$_POST['name'], $_POST['address'], $arrival, $departure, $_POST['apartment_id']]);
+        $update = new PdoBookingRepository();
+        $update->updateId();
 
         return new View('Booking/comments.html', [
 
@@ -54,12 +55,12 @@ class BookingController
 
     }
 
-    public function delete(array $vars): Redirect
-    {
-        $stmt = (new Dbh())->connect()->prepare('DELETE FROM booking WHERE apartment_id=? AND arrival = ?');
-        $stmt->execute([$vars['id'], $_POST['arrival']]);
-
-        return new Redirect('/apartment/search');
-    }
+//    public function delete(array $vars): Redirect
+//    {
+//        $stmt = (new Dbh())->connect()->prepare('DELETE FROM booking WHERE apartment_id=? AND arrival = ?');
+//        $stmt->execute([$vars['id'], $_POST['arrival']]);
+//
+//        return new Redirect('/apartment/search');
+//    }
 
 }
