@@ -9,5 +9,8 @@
     "twig/twig": "^3.0",
     "nesbot/carbon": "^2.57",
     "ext-pdo": "*"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9.5"
   }
 }

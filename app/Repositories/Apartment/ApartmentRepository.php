@@ -4,6 +4,6 @@ namespace App\Repositories\Apartment;
 
 interface ApartmentRepository
 {
-    public function insert(): void;
-    public function allBookingDeparture(): array;
+    public function insert($title, $description, $address, $arrival, $departure, $booked): void;
+    public function allBookingDeparture($arrival): array;
 }

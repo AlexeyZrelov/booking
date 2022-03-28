@@ -7,20 +7,15 @@ use PDO;
 
 class PdoApartmentRepository implements ApartmentRepository
 {
-    public function insert(): void
+    public function insert($title, $description, $address, $arrival, $departure, $booked): void
     {
-        $arrival = $_POST['arrival'] ?? null;
-        $departure = $_POST['departure'] ?? null;
-
         $stmt = (new Dbh())->connect()->prepare('INSERT INTO apartment (title, description, address, arrival, departure, booked) VALUES (?, ?, ?, ?, ?, ?)');
 
-        $stmt->execute([$_POST['title'], $_POST['description'], $_POST['address'], $arrival, $departure, $_POST['booked']]);
+        $stmt->execute([$title, $description, $address, $arrival, $departure, $booked]);
     }
 
-    public function allBookingDeparture(): array
+    public function allBookingDeparture($arrival): array
     {
-        $arrival = $_POST['arrival'] ?? null;
-//        $departure = $_POST['departure'] ?? null;
 
         $stmt1 = (new Dbh())->connect()->prepare('SELECT * FROM booking WHERE departure <= ?');
         $stmt1->execute(array($arrival));

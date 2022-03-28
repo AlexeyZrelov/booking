@@ -14,16 +14,17 @@ class PdoCommentRepository implements CommentRepository
         return $stmt1->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function insert(): void
+    public function insert($apartment_id, $name, $comment): void
     {
         $stmt = (new Dbh())->connect()->prepare('INSERT INTO comments (apartment_id, name, comment, date) VALUES (?, ?, ?, NOW())');
-        $stmt->execute([$_POST['apartment_id'], $_POST['name'], $_POST['comment']]);
+        $stmt->execute([$apartment_id, $name, $comment]);
     }
 
     public function deleteById(array $vars): void
     {
+        $id = (int)$vars['id'];
         $stmt = (new Dbh())->connect()->prepare('DELETE FROM comments WHERE id=?');
-        $stmt->execute([$vars['id']]);
+        $stmt->execute([$id]);
     }
 
 }

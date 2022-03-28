@@ -4,6 +4,9 @@ namespace App\Controllers;
 
 use App\Redirect;
 use App\Repositories\Login\PdoLoginRepository;
+use App\Services\Login\AllUsers\AllUsersRequest;
+use App\Services\Login\AllUsers\AllUsersService;
+use App\Services\Login\AllUsersPassword\AllUsersPasswordService;
 use App\View;
 use App\Models\Dbh;
 use PDO;
@@ -25,7 +28,7 @@ class LoginController
             $pwd = password_hash($_POST['pwd'], PASSWORD_DEFAULT);
 
             $login->insert($pwd);
-            $user = $login->allUsersPassword($pwd);
+            $user = $login->allUsersPassword($_POST['uid'], $pwd);
 
 //            session_start();
             $_SESSION['user_id'] = $user->getId();
@@ -60,7 +63,10 @@ class LoginController
 
         } else {
 
-            $user = $login->allUsers();
+//            $user = $login->allUsers();
+
+            $u = new AllUsersService();
+            $user = $u->execute(new AllUsersRequest($_POST['uid'], $_POST['pwd']));
 
             $_SESSION['user_id'] = $user->getId();
             $_SESSION['log_name'] = $user->getUid();

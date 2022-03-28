@@ -9,19 +9,19 @@ use PDO;
 class PdoLoginRepository implements LoginRepository
 {
 
-    public function allUsers(): User
+    public function allUsers($uid, $pwd): User
     {
         $stmt = (new Dbh())->connect()->prepare("SELECT * FROM users WHERE uid = ? OR password = ?");
-        $stmt->execute(array($_POST['uid'], $_POST['pwd']));
+        $stmt->execute(array($uid, $pwd));
         $arr = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         return new User($arr[0]['id'], $arr[0]['uid'], $arr[0]['email'], $arr[0]['password'], $arr[0]['created_at']);
     }
 
-    public function allUsersPassword($pwd): User
+    public function allUsersPassword($uid, $pwd): User
     {
         $stmt1 = (new Dbh())->connect()->prepare('SELECT * FROM users WHERE uid = ? AND password = ?');
-        $stmt1->execute([$_POST['uid'], $pwd]);
+        $stmt1->execute([$uid, $pwd]);
         $arr = $stmt1->fetchAll(PDO::FETCH_ASSOC);
 
         return new User($arr[0]['id'], $arr[0]['uid'], $arr[0]['email'], $arr[0]['password']);
@@ -39,8 +39,10 @@ class PdoLoginRepository implements LoginRepository
         $stmt = (new Dbh())->connect()->prepare('SELECT password FROM users WHERE uid = ?');
 
         $stmt->execute(array($_POST['uid']));
+//        $stmt->execute(array($uid));
         $pwdHashed = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return password_verify($_POST['pwd'], $pwdHashed[0]["password"]);
+//        return password_verify($pwd, $pwdHashed[0]["password"]);
     }
 
     public function insert($pwd): void

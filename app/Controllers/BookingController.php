@@ -4,6 +4,12 @@ namespace App\Controllers;
 
 use App\Redirect;
 use App\Repositories\Booking\PdoBookingRepository;
+use App\Services\Booking\All\AllBookingRequest;
+use App\Services\Booking\All\AllBookingService;
+use App\Services\Booking\Price\PriceRequest;
+use App\Services\Booking\Price\PriceService;
+use App\Services\Booking\Update\UpdateBookingRequest;
+use App\Services\Booking\Update\UpdateBookingService;
 use App\View;
 use App\Models\Dbh;
 use Carbon\Carbon;
@@ -17,11 +23,13 @@ class BookingController
         $arrival = $_POST['arrival'] ?? null;
         $departure = $_POST['departure'] ?? null;
 
-        $src = new PdoBookingRepository();
-        $result = $src->allId($vars);
-        $price = $src->priceId($vars);
+        $srv = new AllBookingService();
+        $result = $srv->execute(new AllBookingRequest($vars));
 
         $interval = Carbon::parse($arrival)->diffInDays($departure);
+
+        $prc = new PriceService();
+        $price = $prc->execute(new PriceRequest($vars));
         $total = $interval * $price;
 
         return new View('Booking/index.html', [
@@ -39,8 +47,8 @@ class BookingController
         $arrival = $_POST['arrival'] ?? null;
         $departure = $_POST['departure'] ?? null;
 
-        $update = new PdoBookingRepository();
-        $update->updateId();
+        $up = new UpdateBookingService();
+        $up->execute(new UpdateBookingRequest($_POST['name'], $_POST['address'], $arrival, $departure, $_POST['apartment_id']));
 
         return new View('Booking/comments.html', [
 
